@@ -106,6 +106,16 @@
     new IntersectionObserver(([e]) => priceBar.classList.toggle('away', e.isIntersecting), { threshold: 0.1 }).observe(card);
   }
 
+  // Phones: tapping a birthday while the keyboard is up made the page jump. Close the keyboard first.
+  const isTyping = el => !!(el && el.matches && el.matches('input:not([type=radio]):not([type=checkbox]):not([type=date]), textarea'));
+  form.addEventListener('touchstart', e => {
+    const dateInput = e.target.closest && e.target.closest('input[type=date]');
+    if (dateInput && isTyping(document.activeElement)) document.activeElement.blur();
+  }, { passive: true });
+  // Hide the bottom cost bar while typing so it doesn't bounce with the keyboard.
+  document.addEventListener('focusin', e => document.body.classList.toggle('typing', isTyping(e.target)));
+  document.addEventListener('focusout', () => setTimeout(() => { if (!isTyping(document.activeElement)) document.body.classList.remove('typing'); }, 60));
+
   form.querySelectorAll('input[name=kidCount]').forEach(r => r.addEventListener('change', () => renderKids(count())));
   form.addEventListener('input', e => { if (e.target.classList.contains('k-first')) update(); });
   renderKids(count());
