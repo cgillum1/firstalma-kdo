@@ -390,3 +390,11 @@ details.faq p{margin-top:0}
 @media (max-width:860px){.kid-card textarea{min-height:46px}}
 .chips.stack{margin:6px 0 4px;background:none;border:0;border-radius:0;padding:0}
 @media (max-width:860px){html{scroll-behavior:auto}body.typing .price-bar{display:none}}
+/* card chips: title on one line, description under it */
+.chips.cards .chip-opt span{display:grid;grid-template-columns:auto 1fr;column-gap:12px;row-gap:2px;align-items:center}
+.chips.cards .chip-opt span:before{grid-row:1 / span 2}
+.chips.cards b,.chips.cards i{grid-column:2;margin-top:0}
+.chips.cards .chip-opt span{padding:10px 12px;column-gap:10px}
+.chips.cards .chip-opt span:before{width:18px;height:18px}
+.chips.cards b{font-size:15px;white-space:nowrap}
+.chips.cards i{font-size:13px;white-space:nowrap}
