@@ -3,7 +3,7 @@
   const START = { y: 2027, m: 1, d: 7 };
   const THURSDAYS = 18, MONTHS = 5, ENROLL = 60, SIBLING = 0.9;
   const GROUPS = [
-    { name: 'Babies', min: 6, max: 18, rate: 20 },
+    { name: 'Babies', min: 6, max: 18, rate: 25 },
     { name: 'Toddlers', min: 18, max: 36, rate: 20 },
     { name: 'Preschool', min: 36, max: 66, rate: 20 }
   ];
