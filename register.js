@@ -32,6 +32,10 @@
       const node = tpl.content.firstElementChild.cloneNode(true);
       node.querySelectorAll('.potty input').forEach(r => { r.name = 'potty' + i; });
       node.querySelector('.potty').dataset.group = 'potty' + i;
+      node.querySelectorAll('.special input').forEach(r => {
+        r.name = 'special' + i;
+        r.addEventListener('change', () => { node.querySelector('.special-more').hidden = r.value !== 'Yes' || !r.checked; node.querySelector('.special').classList.remove('invalid'); });
+      });
       const last = kidsEl.querySelector('.k-last')?.value || document.getElementById('pLast').value;
       if (last) node.querySelector('.k-last').value = last;
       node.querySelector('.k-bday').addEventListener('change', e => { KDO.clearErr(e.target); update(); });
@@ -182,7 +186,8 @@
     const kids = activeCards().map(c => ({
       first: c.querySelector('.k-first').value.trim(), last: c.querySelector('.k-last').value.trim(),
       bday: c.querySelector('.k-bday').value, notes: c.querySelector('.k-notes').value.trim(),
-      potty: c.querySelector('.potty input:checked')?.value || ''
+      potty: c.querySelector('.potty input:checked')?.value || '',
+      special: c.querySelector('.special input:checked')?.value === 'Yes' ? 'Yes: ' + c.querySelector('.k-special').value.trim() : 'No'
     }));
     const c = people('contacts'), e1 = c[0] || {}, e2 = c[1] || {};
     const hasP2 = !p2.hidden;
@@ -207,7 +212,7 @@
         const others = kids.filter((_, j) => j !== i).map(o => `${o.first} ${o.last}`).join(', ');
         await KDO.post({
           ...shared, childFirst: k.first, childLast: k.last, birthday: k.bday, siblings: others,
-          potty: k.potty, allergies: k.notes
+          potty: k.potty, allergies: k.notes, specialNeeds: k.special
         });
         posted.add(i);
       }
