@@ -38,7 +38,8 @@
       });
       const last = kidsEl.querySelector('.k-last')?.value || document.getElementById('pLast').value;
       if (last) node.querySelector('.k-last').value = last;
-      node.querySelector('.k-bday').addEventListener('change', e => { KDO.clearErr(e.target); update(); });
+      node.querySelector('.k-bday').addEventListener('change', e => { KDO.clearErr(e.target); ageErr(e.target); update(); });
+      KDO.datePicker(node.querySelector('.k-bday'), { name: () => node.querySelector('.k-first').value.trim() });
       node.querySelectorAll('input,textarea').forEach(el => el.addEventListener('input', () => KDO.clearErr(el)));
       kidsEl.appendChild(node);
       KDO.markRequired(node);
@@ -58,11 +59,11 @@
       const bday = c.querySelector('.k-bday').value;
       const g = groupFor(bday);
       const badge = c.querySelector('.kid-badge');
-      const known = !!(g && g.rate);
+      const known = !!(g && g.rate), outside = !!(g && !g.rate);
       if (known) { badge.textContent = `${g.name} room, $${g.rate} per Thursday`; badge.style.display = 'inline-block'; }
       else badge.style.display = 'none';
-      if (!known) estimated = true;
-      return { name: c.querySelector('.k-first').value.trim() || (count() > 1 ? `Child ${i + 1}` : 'Your child'), rate: known ? g.rate : EST_RATE, group: known ? g.name : '', note: known ? '' : (bday ? 'Check the birthday' : 'No birthday yet') };
+      if (!bday) estimated = true;
+      return { name: c.querySelector('.k-first').value.trim() || (count() > 1 ? `Child ${i + 1}` : 'Your child'), rate: known ? g.rate : outside ? 0 : EST_RATE, group: known ? g.name : '', note: known ? '' : outside ? "Outside KDO's ages (6 months to Pre-K)" : 'No birthday yet' };
     });
     const priced = [...kids].sort((a, b) => b.rate - a.rate);
     let tuitionBase = 0, sibDiscount = 0, perThursday = 0;
@@ -71,19 +72,21 @@
       tuitionBase += sem;
       if (i > 0) sibDiscount += sem * (1 - SIBLING);
       perThursday += i > 0 ? k.rate * SIBLING : k.rate;
-      const how = k.group ? `${k.group}: $${k.rate} x ${THURSDAYS} Thursdays` : `${k.note}, counted at $${k.rate}`;
+      const how = k.group ? `${k.group}: $${k.rate} x ${THURSDAYS} Thursdays` : k.rate ? `${k.note}, counted at $${k.rate}` : k.note;
       return `<div class="pc-kid${k.group ? '' : ' pc-est'}"><span>${escapeHtml(k.name)}<small>${how}</small></span><b>${money2(sem)}</b></div>`;
     });
     if (sibDiscount > 0) lines.push(`<div class="pc-kid pc-disc"><span>Sibling discount<small>10% off each additional child</small></span><b>-${money2(sibDiscount)}</b></div>`);
-    const tuition = tuitionBase - sibDiscount, fee = FEE * kids.length, total = tuition + fee;
+    const nPriced = kids.filter(k => k.rate).length;
+    const tuition = tuitionBase - sibDiscount, fee = FEE * nPriced, total = tuition + fee;
     // Monthly: January to April each cover 4 Thursdays, May covers the last 2. The fee is split evenly over all 5 payments.
     const feeShare = fee / MONTHS, monthly = perThursday * 4 + feeShare, lastMonth = perThursday * 2 + feeShare;
     lines.push(`<div class="pc-kid"><span>Tuition</span><b>${money2(tuition)}</b></div>`);
-    lines.push(`<div class="pc-kid"><span>Snacks and supplies fee<small>$${FEE} x ${kids.length} ${kids.length > 1 ? 'kids' : 'child'}: snacks, wipes, craft materials</small></span><b>${money2(fee)}</b></div>`);
+    lines.push(`<div class="pc-kid"><span>Snacks and supplies fee<small>$${FEE} x ${nPriced} ${nPriced === 1 ? 'child' : 'kids'}: snacks, wipes, craft materials</small></span><b>${money2(fee)}</b></div>`);
     document.getElementById('price-lines').innerHTML = lines.join('');
     document.getElementById('pc-total').textContent = money2(total);
     document.getElementById('pc-week').textContent = money2(perThursday);
     document.getElementById('pc-month').textContent = money2(monthly);
+    document.getElementById('pc-due').textContent = `Due by the 7th, January to April. May is ${money2(lastMonth)} (only 2 Thursdays).`;
     document.getElementById('pc-total-label').innerHTML = 'Monthly payment' + (estimated ? '<small class="pc-lbl">Estimate until birthdays are added</small>' : '');
     document.getElementById('pc-monthly').textContent = `${money2(monthly)} by the 7th of January, February, March, and April, then ${money2(lastMonth)} by May 7 (May has only 2 Thursdays).`;
     document.getElementById('pc-full').textContent = `${money2(tuition * 0.9)} tuition + ${money2(fee)} fee = ${money2(tuition * 0.9 + fee)}, due by January 7.`;
@@ -107,20 +110,27 @@
   // On phones the cost sits at the end of the form, right above Submit, and a bottom bar tracks the total.
   const card = document.getElementById('price-card'), layout = card.parentElement, slot = document.getElementById('pc-slot');
   const mq = window.matchMedia('(max-width: 860px)');
-  const place = () => (mq.matches ? slot : layout).appendChild(card);
+  const more = document.getElementById('pc-more');
+  const place = () => { (mq.matches ? slot : layout).appendChild(card); more.open = !mq.matches; };
   place();
   mq.addEventListener('change', place);
+  more.querySelector('summary').addEventListener('click', e => {
+    e.preventDefault();
+    const start = more.offsetHeight;
+    if (more.open) {
+      more.animate({ height: [start + 'px', more.querySelector('summary').offsetHeight + 'px'] }, { duration: 240, easing: 'ease' }).onfinish = () => { more.open = false; };
+    } else {
+      more.open = true;
+      more.animate({ height: [start + 'px', more.offsetHeight + 'px'] }, { duration: 280, easing: 'ease' });
+    }
+  });
+  document.querySelector('.price-bar .btn')?.addEventListener('click', () => { more.open = true; });
   const priceBar = document.querySelector('.price-bar');
   if (priceBar && 'IntersectionObserver' in window) {
     new IntersectionObserver(([e]) => priceBar.classList.toggle('away', e.isIntersecting), { threshold: 0.1 }).observe(card);
   }
 
-  // Phones: tapping a birthday while the keyboard is up made the page jump. Close the keyboard first.
-  const isTyping = el => !!(el && el.matches && el.matches('input:not([type=radio]):not([type=checkbox]):not([type=date]), textarea'));
-  form.addEventListener('touchstart', e => {
-    const dateInput = e.target.closest && e.target.closest('input[type=date]');
-    if (dateInput && isTyping(document.activeElement)) document.activeElement.blur();
-  }, { passive: true });
+  const isTyping = el => !!(el && el.matches && el.matches('input:not([type=radio]):not([type=checkbox]):not([type=hidden]), textarea'));
   // Hide the bottom cost bar while typing so it doesn't bounce with the keyboard.
   document.addEventListener('focusin', e => document.body.classList.toggle('typing', isTyping(e.target)));
   document.addEventListener('focusout', () => setTimeout(() => { if (!isTyping(document.activeElement)) document.body.classList.remove('typing'); }, 60));
@@ -163,17 +173,20 @@
     pick: c.querySelector('.p-pick') ? (c.querySelector('.p-pick').checked ? 'Yes' : 'No') : ''
   }));
 
+  // Marks a birthday outside KDO's ages right away; returns true if it's bad.
+  function ageErr(b) {
+    const g = groupFor(b.value);
+    if (!g || g.rate) return false;
+    KDO.setErr(b, g.name === 'young' ? 'KDO starts at 6 months old on January 7, 2027' : 'KDO is for kids up to Pre-K');
+    return true;
+  }
+
   function validateKids() {
     let first = null;
     activeCards().forEach(c => {
       const b = c.querySelector('.k-bday');
-      if (b.value) {
-        const g = groupFor(b.value);
-        if (!g.rate) {
-          KDO.setErr(b, g.name === 'young' ? 'KDO starts at 6 months old on January 7, 2027' : 'KDO is for kids up to Pre-K');
-          first = first || b;
-        }
-      }
+      if (!b.value) KDO.setErr(b, 'Required');
+      if (!b.value || ageErr(b)) first = first || c.querySelector('.date-btn');
     });
     return first;
   }
@@ -184,7 +197,8 @@
     e.preventDefault();
     if (sending) return;
     msg.className = 'msg'; msg.textContent = '';
-    const bad = KDO.validate(form) || validateKids();
+    const badForm = KDO.validate(form), badKid = validateKids(), bad = badForm || badKid;
+    if (!badForm && badKid) { badKid.scrollIntoView({ behavior: 'smooth', block: 'center' }); badKid.classList.add('shake'); setTimeout(() => badKid.classList.remove('shake'), 700); }
     if (bad) { msg.className = 'msg err'; msg.textContent = 'Please fix the highlighted fields.'; return; }
 
     const v = id => document.getElementById(id).value.trim();

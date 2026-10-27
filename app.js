@@ -265,3 +265,172 @@ document.querySelectorAll('details.faq').forEach(d => {
     }
   });
 });
+
+// Birthday picker: year, then month, then day, in the KDO colors. Writes yyyy-mm-dd to the hidden input.
+// Phones get a bottom sheet; wider screens get a popover under the field.
+KDO.datePicker = (input, { minYear = 2021, name = () => '' } = {}) => {
+  const btn = input.closest('.field').querySelector('.date-btn');
+  const anchor = btn.parentElement;
+  const text = btn.querySelector('.date-text');
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const STEPS = ['year', 'month', 'day'];
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const maxY = today.getFullYear(), maxM = today.getMonth();
+  const pad = n => String(n).padStart(2, '0');
+  const parse = v => { const [a, b, c] = (v || '').split('-').map(Number); return a ? { y: a, m: b - 1, d: c } : null; };
+  const sheet = () => window.matchMedia('(max-width: 600px)').matches;
+  let pop = null, back = null, body, step, y, m, sel, kb = false;
+
+  function paint() {
+    sel = parse(input.value);
+    text.textContent = sel ? `${MONTHS[sel.m]} ${sel.d}, ${sel.y}` : 'Choose a birthday';
+    btn.classList.toggle('filled', !!sel);
+  }
+
+  function open() {
+    const a = document.activeElement;
+    if (a && a !== btn && a.matches('input, textarea')) a.blur(); // drop the phone keyboard first
+    sel = parse(input.value);
+    y = sel ? sel.y : null; m = sel ? sel.m : null; step = null;
+    pop = document.createElement('div');
+    pop.className = 'dp' + (sheet() ? ' dp-sheet' : '');
+    pop.setAttribute('role', 'dialog');
+    pop.setAttribute('aria-label', 'Choose a birthday');
+    pop.innerHTML = '<div class="dp-grab"></div><div class="dp-head"><div class="dp-title"><small></small><b></b></div>'
+      + '<button type="button" class="dp-x" aria-label="Close">&times;</button></div>'
+      + '<div class="dp-steps">' + STEPS.map(s => `<button type="button" data-step="${s}"></button>`).join('') + '</div><div class="dp-body"></div>';
+    body = pop.querySelector('.dp-body');
+    if (sheet()) {
+      back = document.createElement('div');
+      back.className = 'dp-back';
+      back.addEventListener('click', () => close());
+      document.body.append(back, pop);
+      document.documentElement.classList.add('dp-lock');
+    } else anchor.appendChild(pop);
+    pop.querySelector('.dp-x').addEventListener('click', () => close());
+    pop.querySelector('.dp-steps').addEventListener('click', e => {
+      const b = e.target.closest('button');
+      if (b && !b.disabled && b.dataset.step !== step) go(b.dataset.step);
+    });
+    body.addEventListener('click', onPick);
+    pop.addEventListener('keydown', onKey);
+    go(sel ? 'day' : 'year');
+    btn.setAttribute('aria-expanded', 'true');
+    requestAnimationFrame(() => requestAnimationFrame(() => { pop && pop.classList.add('open'); back && back.classList.add('open'); }));
+    if (!sheet()) setTimeout(() => pop && pop.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 80);
+    setTimeout(() => document.addEventListener('pointerdown', outside), 0);
+  }
+
+  function close(refocus = true) {
+    if (!pop) return;
+    const p = pop, b = back;
+    pop = back = null;
+    document.removeEventListener('pointerdown', outside);
+    document.documentElement.classList.remove('dp-lock');
+    p.classList.remove('open');
+    if (b) b.classList.remove('open');
+    setTimeout(() => { p.remove(); if (b) b.remove(); }, 320);
+    btn.setAttribute('aria-expanded', 'false');
+    if (refocus && kb) btn.focus({ preventScroll: true });
+    kb = false;
+  }
+  const outside = e => { if (pop && !pop.contains(e.target) && !btn.contains(e.target) && !(back && back.contains(e.target))) close(false); };
+
+  function go(s) {
+    const dir = step ? Math.sign(STEPS.indexOf(s) - STEPS.indexOf(step)) : 0;
+    step = s;
+    render(dir);
+  }
+
+  function render(dir) {
+    const who = name();
+    pop.querySelector('.dp-title small').textContent = who ? `${who}'s birthday` : 'Birthday';
+    pop.querySelector('.dp-title b').textContent = step === 'year' ? 'What year?' : step === 'month' ? `Which month in ${y}?` : 'Which day?';
+    pop.querySelectorAll('.dp-steps button').forEach(b => {
+      const s = b.dataset.step;
+      b.classList.toggle('on', s === step);
+      b.disabled = (s === 'month' && y == null) || (s === 'day' && m == null);
+      b.textContent = s === 'year' ? (y || 'Year') : s === 'month' ? (m != null ? MONTHS[m].slice(0, 3) : 'Month') : (sel && sel.y === y && sel.m === m ? sel.d : 'Day');
+    });
+    const v = document.createElement('div');
+    v.className = 'dp-view' + (dir > 0 ? ' fwd' : dir < 0 ? ' bwd' : '');
+    if (step === 'year') {
+      let h = '';
+      for (let yr = maxY; yr >= minYear; yr--) h += `<button type="button" class="dp-cell${yr === y ? ' on' : ''}" data-y="${yr}">${yr}</button>`;
+      v.innerHTML = `<div class="dp-grid dp-years">${h}</div>`;
+    } else if (step === 'month') {
+      v.innerHTML = '<div class="dp-grid dp-months">' + MONTHS.map((n, i) =>
+        `<button type="button" class="dp-cell${i === m ? ' on' : ''}" data-m="${i}"${y === maxY && i > maxM ? ' disabled' : ''}>${n.slice(0, 3)}</button>`).join('') + '</div>';
+    } else {
+      const first = new Date(y, m, 1).getDay(), days = new Date(y, m + 1, 0).getDate();
+      let h = ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => `<span class="dp-dow">${d}</span>`).join('') + '<span></span>'.repeat(first);
+      for (let d = 1; d <= days; d++) {
+        const dt = new Date(y, m, d);
+        const on = sel && sel.y === y && sel.m === m && sel.d === d;
+        h += `<button type="button" class="dp-cell dp-day${on ? ' on' : ''}${+dt === +today ? ' today' : ''}" data-d="${d}"${dt > today ? ' disabled' : ''}>${d}</button>`;
+      }
+      v.innerHTML = `<div class="dp-monthbar"><button type="button" class="dp-arrow" data-nav="-1" aria-label="Previous month"${y === minYear && m === 0 ? ' disabled' : ''}>&#8249;</button>`
+        + `<b>${MONTHS[m]} ${y}</b><button type="button" class="dp-arrow" data-nav="1" aria-label="Next month"${y === maxY && m >= maxM ? ' disabled' : ''}>&#8250;</button></div>`
+        + `<div class="dp-grid dp-days">${h}</div>`;
+    }
+    // Swap views and ease the height between them.
+    const h0 = body.offsetHeight, had = !!body.firstElementChild;
+    body.replaceChildren(v);
+    body.style.height = '';
+    if (had && dir) {
+      const h1 = body.offsetHeight;
+      body.style.height = h0 + 'px';
+      void body.offsetHeight;
+      body.style.height = h1 + 'px';
+      clearTimeout(body._t);
+      body._t = setTimeout(() => { body.style.height = ''; }, 300);
+    }
+    // Keyboard users get focus moved into the picker; taps and clicks don't, so nothing looks pre-selected.
+    const target = v.querySelector('.dp-cell.on:not([disabled])') || v.querySelector('.dp-cell:not([disabled])');
+    if (target && (kb || pop.contains(document.activeElement))) target.focus({ preventScroll: true });
+  }
+
+  function onPick(e) {
+    const b = e.target.closest('button');
+    if (!b || b.disabled) return;
+    if (b.dataset.y) { y = +b.dataset.y; if (m != null && y === maxY && m > maxM) m = null; go('month'); }
+    else if (b.dataset.m) { m = +b.dataset.m; go('day'); }
+    else if (b.dataset.nav) shift(+b.dataset.nav);
+    else if (b.dataset.d) pick(+b.dataset.d, b);
+  }
+
+  function shift(n) {
+    const dt = new Date(y, m + n, 1);
+    y = dt.getFullYear(); m = dt.getMonth();
+    render(n);
+  }
+
+  function pick(d, b) {
+    input.value = `${y}-${pad(m + 1)}-${pad(d)}`;
+    body.querySelectorAll('.dp-day.on').forEach(x => x.classList.remove('on'));
+    b.classList.add('on', 'pop');
+    paint();
+    btn.classList.remove('flash'); void btn.offsetWidth; btn.classList.add('flash');
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    setTimeout(() => close(), 240);
+  }
+
+  function onKey(e) {
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+    const delta = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key];
+    const cur = document.activeElement;
+    if (step !== 'day' || !delta || !cur || !cur.dataset || !cur.dataset.d) return;
+    e.preventDefault();
+    const dt = new Date(y, m, +cur.dataset.d + delta);
+    if (dt > today || dt.getFullYear() < minYear) return;
+    if (dt.getMonth() !== m || dt.getFullYear() !== y) { const dir = dt > new Date(y, m, 1) ? 1 : -1; y = dt.getFullYear(); m = dt.getMonth(); render(dir); }
+    const next = body.querySelector(`[data-d="${dt.getDate()}"]`);
+    if (next) next.focus();
+  }
+
+  btn.setAttribute('aria-haspopup', 'dialog');
+  btn.setAttribute('aria-expanded', 'false');
+  btn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') kb = true; });
+  btn.addEventListener('click', () => (pop ? close() : open()));
+  paint();
+};

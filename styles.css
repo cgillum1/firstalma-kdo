@@ -413,3 +413,84 @@ details.faq p{margin-top:0}
 .pc-per b{font-family:var(--serif);font-weight:400;font-size:26px;color:#fff}
 .pc-mo{font-family:var(--sans,'DM Sans'),sans-serif;font-size:15px;color:#B8C4C1;margin-left:3px}
 .pc-lbl{display:block;font-size:13px;color:#E4D0A1;font-weight:400}
+
+/* birthday picker */
+.dp-anchor{position:relative}
+.date-btn{display:flex;align-items:center;gap:10px;width:100%;font:inherit;font-size:17px;text-align:left;padding:12px 14px;border:1.5px solid #CFC8B8;border-radius:12px;background:#fff;color:var(--muted);cursor:pointer;transition:border-color .15s ease,box-shadow .2s ease}
+.date-btn:hover{border-color:var(--teal)}
+.date-btn:focus-visible,.date-btn[aria-expanded=true]{outline:0;border-color:var(--teal);box-shadow:0 0 0 4px rgba(64,172,161,.18)}
+.date-btn svg{flex:none;color:var(--teal-dark)}
+.date-btn .date-text{flex:1}
+.date-btn.filled{color:var(--ink);font-weight:500}
+.date-btn .chev{color:var(--muted);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.date-btn[aria-expanded=true] .chev{transform:rotate(180deg)}
+.date-btn.flash .date-text{animation:dpIn .4s ease}
+.invalid .date-btn{border-color:#D64545;background:#FFF6F5}
+@keyframes dpIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.dp{position:absolute;left:0;top:calc(100% + 8px);z-index:50;width:min(360px,100%);background:#fff;border-radius:20px;box-shadow:0 22px 50px rgba(30,38,36,.22),0 2px 8px rgba(30,38,36,.08);padding:16px 16px 14px;opacity:0;transform:translateY(-8px) scale(.97);transform-origin:top left;transition:opacity .2s ease,transform .28s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.dp.open{opacity:1;transform:none;pointer-events:auto}
+.dp.dp-sheet{position:fixed;left:0;right:0;top:auto;bottom:0;width:auto;border-radius:24px 24px 0 0;padding:10px 18px calc(18px + env(safe-area-inset-bottom));opacity:1;transform:translateY(105%);transition:transform .34s cubic-bezier(.2,.9,.25,1)}
+.dp.dp-sheet.open{transform:none}
+.dp-back{position:fixed;inset:0;z-index:49;background:rgba(30,38,36,.45);opacity:0;transition:opacity .28s ease}
+.dp-back.open{opacity:1}
+html.dp-lock,html.dp-lock body{overflow:hidden}
+.dp-grab{display:none}
+.dp-sheet .dp-grab{display:block;width:40px;height:5px;border-radius:3px;background:#D9D4C7;margin:0 auto 12px}
+.dp-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.dp-title small{display:block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-dark)}
+.dp-title b{display:block;font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.2;color:var(--ink)}
+.dp-x{flex:none;width:34px;height:34px;border-radius:50%;border:0;background:var(--cream);color:var(--ink);font-size:22px;line-height:1;cursor:pointer}
+.dp-steps{display:flex;gap:4px;margin:12px 0 12px;padding:4px;background:var(--cream);border-radius:999px}
+.dp-steps button{flex:1;border:0;background:transparent;border-radius:999px;padding:7px 0;font:inherit;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;transition:background .2s ease,color .2s ease,box-shadow .2s ease}
+.dp-steps button.on{background:#fff;color:var(--teal-dark);box-shadow:0 1px 4px rgba(30,38,36,.14)}
+.dp-steps button:disabled{opacity:.45;cursor:default}
+.dp-body{overflow:hidden;transition:height .28s cubic-bezier(.2,.8,.2,1)}
+.dp-view{padding:3px}
+.dp-view.fwd{animation:dpFwd .28s cubic-bezier(.2,.8,.2,1)}
+.dp-view.bwd{animation:dpBwd .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes dpFwd{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+@keyframes dpBwd{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:none}}
+.dp-grid{display:grid;gap:8px}
+.dp-years,.dp-months{grid-template-columns:repeat(3,1fr)}
+.dp-days{grid-template-columns:repeat(7,1fr);gap:4px}
+.dp-cell{border:0;background:var(--cream);color:var(--ink);font:inherit;font-size:17px;font-weight:500;border-radius:14px;padding:13px 0;cursor:pointer;transition:background .15s ease,color .15s ease,transform .12s ease}
+.dp-years .dp-cell{font-family:var(--serif);font-size:24px;font-weight:400;padding:16px 0}
+.dp-cell:hover:not(:disabled){background:#DDF0EC}
+.dp-cell:active:not(:disabled){transform:scale(.94)}
+.dp-cell.on,.dp-cell.on:hover:not(:disabled){background:var(--teal);color:#fff}
+.dp-cell:disabled{background:transparent;color:#C9C3B5;cursor:default}
+.dp-cell:focus{outline:0}
+.dp-cell:focus-visible{outline:2px solid var(--teal-dark);outline-offset:2px}
+.dp-day{aspect-ratio:1;padding:0;border-radius:50%;background:transparent;font-size:16px}
+.dp-day.today{box-shadow:inset 0 0 0 2px var(--gold-dark)}
+.dp-day.pop{animation:dpPop .3s ease}
+@keyframes dpPop{50%{transform:scale(1.2)}}
+.dp-dow{text-align:center;font-size:12px;font-weight:700;color:var(--muted);padding:2px 0 4px}
+.dp-monthbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.dp-monthbar b{font-weight:700;font-size:16px}
+.dp-arrow{width:38px;height:38px;border-radius:50%;border:0;background:var(--cream);font-size:24px;line-height:1;color:var(--ink);cursor:pointer;transition:background .15s ease}
+.dp-arrow:hover:not(:disabled){background:#DDF0EC}
+.dp-arrow:disabled{opacity:.35;cursor:default}
+@media (max-width:860px){.date-btn{font-size:16px;padding:10px 12px;border-radius:10px;min-height:44px}}
+
+/* cost card: monthly first, the breakdown folds away on phones */
+.price-card .pc-total{padding-top:6px}
+.pc-due{font-size:14px;color:#C9D2CF;margin:-4px 0 12px;line-height:1.4}
+details.pc-more{margin-top:14px;background:none;border:0;border-top:1px solid #3A4441;border-radius:0;padding:0;overflow:hidden}
+.pc-more summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:12px 0 6px;font-size:15px;font-weight:700;color:#8FD6CE}
+.pc-more summary::-webkit-details-marker{display:none}
+.pc-more summary:after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);transition:transform .25s ease;margin:0 4px 4px 0}
+.pc-more[open] summary:after{transform:rotate(-135deg);margin-bottom:-2px}
+@media (max-width:860px){
+  .price-card .pc-sub{margin-bottom:2px}
+  .pc-total{align-items:center}
+  .pc-total b{font-size:34px}
+  .pc-due{font-size:13px;margin-bottom:10px}
+  .pc-per{gap:8px}
+  .pc-per div{padding:8px 10px}
+  .pc-per small{font-size:12px}
+  .pc-per b{font-size:22px}
+  .pc-more{margin-top:12px}
+  .pc-more summary{font-size:14px;padding:10px 0 4px}
+}
+.dp{scroll-margin:96px 0 20px}
