@@ -73,7 +73,7 @@
     if (sibDiscount > 0) lines.push(`<div class="pc-kid pc-disc"><span>Sibling discount<small>10% off each additional child</small></span><b>-${money2(sibDiscount)}</b></div>`);
     const tuition = tuitionBase - sibDiscount, enroll = ENROLL * kids.length, total = tuition + enroll;
     lines.push(`<div class="pc-kid"><span>Tuition</span><b>${money2(tuition)}</b></div>`);
-    lines.push(`<div class="pc-kid"><span>Enrollment<small>$60 x ${kids.length} ${kids.length > 1 ? 'kids' : 'child'}, covers supplies and shirts</small></span><b>${money2(enroll)}</b></div>`);
+    lines.push(`<div class="pc-kid"><span>Enrollment<small>$60 x ${kids.length} ${kids.length > 1 ? 'kids' : 'child'}, covers registration and supplies</small></span><b>${money2(enroll)}</b></div>`);
     document.getElementById('price-lines').innerHTML = lines.join('');
     document.getElementById('pc-total').textContent = money2(total);
     document.getElementById('pc-total-label').textContent = estimated ? 'Estimated total (add birthdays)' : 'Total for the semester';
