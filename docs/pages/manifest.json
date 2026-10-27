@@ -1,4 +1,32 @@
 {
+ "slide": {
+  "title": "Church screen slide",
+  "pages": 1,
+  "ratio": 0.5625,
+  "pdf": "",
+  "downloads": [
+   [
+    "Image",
+    "docs/KDO-Church-Slide.png"
+   ]
+  ]
+ },
+ "poster": {
+  "title": "Poster",
+  "pages": 1,
+  "ratio": 1.2943,
+  "pdf": "docs/KDO-Poster.pdf",
+  "downloads": [
+   [
+    "PDF",
+    "docs/KDO-Poster.pdf"
+   ],
+   [
+    "Image",
+    "docs/KDO-Poster.png"
+   ]
+  ]
+ },
  "playbook": {
   "title": "Director's Playbook",
   "pages": 2,
