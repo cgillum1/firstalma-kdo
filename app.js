@@ -434,3 +434,72 @@ KDO.datePicker = (input, { minYear = 2021, name = () => '' } = {}) => {
   btn.addEventListener('click', () => (pop ? close() : open()));
   paint();
 };
+
+// Document viewer: links with data-doc open the document's page images in a pop-up, so nothing depends on
+// a phone's PDF or Word viewer. Pages and titles come from docs/pages/manifest.json (built by build-pages.sh).
+KDO.docViewer = (() => {
+  let manifest = null, el = null, back = null, ours = false;
+  const load = () => manifest || (manifest = fetch('docs/pages/manifest.json').then(r => r.json()));
+  const phone = () => window.matchMedia('(max-width: 600px)').matches;
+
+  async function open(key, push = true) {
+    const docs = await load(), d = docs[key];
+    if (!d || el) return;
+    back = document.createElement('div');
+    back.className = 'dv-back';
+    el = document.createElement('div');
+    el.className = 'dv';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-modal', 'true');
+    el.setAttribute('aria-label', d.title);
+    const unit = key === 'proposal' ? 'slides' : d.pages === 1 ? 'page' : 'pages';
+    let pages = '';
+    for (let i = 1; i <= (d.html ? 0 : d.pages); i++) {
+      pages += `<div class="dv-page" style="aspect-ratio:1/${d.ratio}"><img src="docs/pages/${key}-${i}.jpg" alt="${d.title}, page ${i}" loading="${i < 3 ? 'eager' : 'lazy'}" decoding="async"></div>`;
+    }
+    el.innerHTML = `<div class="dv-bar"><div class="dv-title"><b>${d.title}</b><small>${d.html ? 'Kids Day Out at First Baptist Alma' : d.pages + ' ' + unit}</small></div>`
+      + (d.pdf ? `<a class="dv-dl" href="${d.pdf}" download>PDF</a>` : '')
+      + '<button type="button" class="dv-x" aria-label="Close">&times;</button></div>'
+      + `<div class="dv-scroll">${d.html ? '<article class="dv-text"><p class="dv-loading">Loading...</p></article>' : `<div class="dv-pages">${pages}</div>`}</div>`
+      + (!d.html && d.pages > 1 ? `<div class="dv-count">1 of ${d.pages}</div>` : '');
+    if (d.html) fetch(d.html).then(r => r.text()).then(t => { const a = el && el.querySelector('.dv-text'); if (a) a.innerHTML = t; });
+    document.body.append(back, el);
+    document.documentElement.classList.add('dp-lock');
+    back.addEventListener('click', () => close());
+    el.querySelector('.dv-x').addEventListener('click', () => close());
+    const count = el.querySelector('.dv-count');
+    if (count && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(entries => entries.forEach(e => {
+        if (e.isIntersecting) count.textContent = `${[...el.querySelectorAll('.dv-page')].indexOf(e.target) + 1} of ${d.pages}`;
+      }), { root: el.querySelector('.dv-scroll'), threshold: 0.5 });
+      el.querySelectorAll('.dv-page').forEach(p => io.observe(p));
+    }
+    if (push) { history.pushState({ kdoDoc: key }, ''); ours = true; }
+    requestAnimationFrame(() => requestAnimationFrame(() => { el && el.classList.add('open'); back && back.classList.add('open'); }));
+    el.querySelector('.dv-x').focus({ preventScroll: true });
+  }
+
+  function close(fromHistory = false) {
+    if (!el) return;
+    const e = el, b = back;
+    el = back = null;
+    e.classList.remove('open');
+    b.classList.remove('open');
+    document.documentElement.classList.remove('dp-lock');
+    setTimeout(() => { e.remove(); b.remove(); }, 340);
+    if (ours && !fromHistory) { ours = false; history.back(); }
+    ours = false;
+  }
+
+  // Phones: the back button closes the viewer instead of leaving the page.
+  window.addEventListener('popstate', () => { if (el) close(true); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && el) close(); });
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('[data-doc]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    open(a.dataset.doc);
+  });
+  if (/^#view=\w+$/.test(location.hash)) open(location.hash.slice(6), false);
+  return { open, close, phone };
+})();
