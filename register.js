@@ -1,7 +1,7 @@
 // Kids Day Out registration: one form per family, one sheet row per child.
 (() => {
   const START = { y: 2027, m: 1, d: 7 };
-  const THURSDAYS = 18, MONTHS = 5, ENROLL = 60, SIBLING = 0.9;
+  const THURSDAYS = 18, MONTHS = 5, FEE = 65, SIBLING = 0.9;
   const GROUPS = [
     { name: 'Babies', min: 6, max: 18, rate: 25 },
     { name: 'Toddlers', min: 18, max: 36, rate: 20 },
@@ -75,20 +75,24 @@
       return `<div class="pc-kid${k.group ? '' : ' pc-est'}"><span>${escapeHtml(k.name)}<small>${how}</small></span><b>${money2(sem)}</b></div>`;
     });
     if (sibDiscount > 0) lines.push(`<div class="pc-kid pc-disc"><span>Sibling discount<small>10% off each additional child</small></span><b>-${money2(sibDiscount)}</b></div>`);
-    const tuition = tuitionBase - sibDiscount, enroll = ENROLL * kids.length, total = tuition + enroll;
+    const tuition = tuitionBase - sibDiscount, fee = FEE * kids.length, total = tuition + fee;
+    // Monthly: January to April each cover 4 Thursdays, May covers the last 2. The fee is split evenly over all 5 payments.
+    const feeShare = fee / MONTHS, monthly = perThursday * 4 + feeShare, lastMonth = perThursday * 2 + feeShare;
     lines.push(`<div class="pc-kid"><span>Tuition</span><b>${money2(tuition)}</b></div>`);
-    lines.push(`<div class="pc-kid"><span>Enrollment<small>$60 x ${kids.length} ${kids.length > 1 ? 'kids' : 'child'}, covers registration and supplies</small></span><b>${money2(enroll)}</b></div>`);
+    lines.push(`<div class="pc-kid"><span>Snacks and supplies fee<small>$${FEE} x ${kids.length} ${kids.length > 1 ? 'kids' : 'child'}: snacks, wipes, craft materials</small></span><b>${money2(fee)}</b></div>`);
     document.getElementById('price-lines').innerHTML = lines.join('');
     document.getElementById('pc-total').textContent = money2(total);
+    document.getElementById('pc-week').textContent = money2(perThursday);
+    document.getElementById('pc-month').textContent = money2(monthly);
     document.getElementById('pc-total-label').textContent = estimated ? 'Estimated total (add birthdays)' : 'Total for the semester';
-    document.getElementById('pc-weekly').textContent = `${money2(perThursday)} each Thursday. The first Thursday plus enrollment (${money2(perThursday + enroll)}) is due when your spot is confirmed.`;
-    document.getElementById('pc-full').textContent = `${money2(tuition * 0.9)} tuition + ${money2(enroll)} enrollment = ${money2(tuition * 0.9 + enroll)}`;
+    document.getElementById('pc-monthly').textContent = `${money2(monthly)} by the 7th of January, February, March, and April, then ${money2(lastMonth)} by May 7 (May has only 2 Thursdays).`;
+    document.getElementById('pc-full').textContent = `${money2(tuition * 0.9)} tuition + ${money2(fee)} fee = ${money2(tuition * 0.9 + fee)}, due by January 7.`;
     const bar = document.getElementById('price-bar-amt');
     if (bar) {
       if (bar.textContent && bar.textContent !== money2(total)) { bar.classList.remove('flash'); void bar.offsetWidth; bar.classList.add('flash'); }
       bar.textContent = money2(total);
       document.getElementById('price-bar-label').textContent = estimated ? 'Estimated semester total' : 'Semester total';
-      document.getElementById('price-bar-week').textContent = `or ${money2(perThursday)} each Thursday`;
+      document.getElementById('price-bar-week').textContent = `or ${money2(monthly)} a month`;
     }
   }
 
