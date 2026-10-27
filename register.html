@@ -105,13 +105,14 @@
       <div class="field"><label for="heard">How did you hear about KDO? <span class="opt">(optional)</span></label><textarea id="heard" rows="3" placeholder="A friend, story time, Facebook, church..."></textarea></div>
       <label>Photos</label>
       <div class="chips stack" role="radiogroup" aria-label="Photo permission">
-        <label class="chip-opt"><input type="radio" name="photos" value="yes" checked><span>OK to share photos with KDO families in Homeroom</span></label>
+        <label class="chip-opt"><input type="radio" name="photos" value="yes" checked><span>OK to share in Homeroom (KDO families only)</span></label>
         <label class="chip-opt"><input type="radio" name="photos" value="no"><span>Please don't share photos</span></label>
       </div>
       <label class="check"><input type="checkbox" id="agree" required><span>I've read the <a href="docs/KDO-Parent-Handbook.pdf" target="_blank">Parent Handbook</a> and understand spots are first come, first served.</span></label>
     </fieldset>
 
     <div class="hp" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" tabindex="-1" autocomplete="off"></div>
+    <div id="pc-slot"></div>
     <div class="submit"><button class="btn btn-primary" type="submit" id="submit-btn">Submit registration</button><span class="msg" id="msg" role="status"></span></div>
   </form>
 
@@ -127,17 +128,17 @@
   <h2 class="pc-title">Your cost</h2>
   <p class="pc-sub">Founding Family rate. KDO is every Thursday, 9:00 to 2:00.</p>
   <div id="price-lines"></div>
-  <div class="pc-row pc-total"><span>Total for the semester</span><b id="pc-total">$510</b></div>
+  <div class="pc-row pc-total"><span id="pc-total-label">Total for the semester</span><b id="pc-total"></b></div>
   <div class="pc-pay">
     <p class="pc-pay-title">Two ways to pay</p>
-    <div class="pc-opt"><b>Weekly</b><span id="pc-weekly">$25 each Thursday. The first Thursday plus enrollment ($85) is due when your spot is confirmed.</span></div>
-    <div class="pc-opt"><b>In full, save 10%</b><span id="pc-full">$405 tuition + $60 enrollment = $465</span></div>
+    <div class="pc-opt"><b>Weekly</b><span id="pc-weekly"></span></div>
+    <div class="pc-opt"><b>In full, save 10%</b><span id="pc-full"></span></div>
   </div>
   <p class="pc-note">Nothing is due today. Families who join this semester keep these rates as long as they stay enrolled.</p>
 </aside>
 </div></main>
 
-<div class="price-bar"><div><small>Semester total</small><b id="price-bar-amt">$510</b></div><a class="btn btn-primary" href="#submit-btn">Finish</a></div>
+<div class="price-bar"><div><small id="price-bar-label">Semester total</small><b id="price-bar-amt"></b><small class="pb-week" id="price-bar-week"></small></div><a class="btn btn-primary" href="#price-card">See the math</a></div>
 
 <template id="person-tpl">
   <div class="sub-card person">
@@ -148,7 +149,7 @@
     </div>
     <div class="row">
       <div class="field"><label>Phone</label><input type="tel" class="phone p-phone" required placeholder="(479) 555-0123" inputmode="numeric"><small class="err-text"></small></div>
-      <div class="field"><label>Relationship <span class="opt">(optional)</span></label><input type="text" class="p-rel" placeholder="Grandma, aunt, neighbor"></div>
+      <div class="field"><label>Relation <span class="opt">(optional)</span></label><input type="text" class="p-rel" placeholder="Grandma"></div>
     </div>
     <label class="check p-pick-wrap"><input type="checkbox" class="p-pick" checked><span>Also allowed to pick up</span></label>
   </div>

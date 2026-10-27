@@ -320,3 +320,71 @@ details.faq p{margin-top:0}
 @media (max-width:860px){.bigfacts{grid-template-columns:1fr 1fr}.bigfacts b{font-size:24px}.tiles{grid-template-columns:1fr 1fr}.tiles div{font-size:17px;padding:16px}.ratios{grid-template-columns:1fr}.docs{grid-template-columns:1fr}}
 
 @media (max-width:860px){.formcard .bigfacts{grid-template-columns:1fr!important}}
+
+/* v5: compact phone form. More fits on screen; cost lives at the end of the form plus a bottom bar. */
+.price-card{scroll-margin-top:84px}
+.pc-est small{color:#E4D0A1}
+@keyframes flash{0%{color:#fff;transform:scale(1.15)}100%{color:var(--gold);transform:scale(1)}}
+@media (max-width:860px){
+  .top .wrap{height:58px}
+  .top img{height:36px}
+  .formpage{padding:10px 0 110px}
+  .formpage .wrap{padding:0 10px}
+  .formcard{padding:18px 14px 22px;border-radius:18px}
+  .formcard h1{font-size:28px;margin-bottom:4px}
+  .formcard .eyebrow{font-size:11px;letter-spacing:.14em;margin-bottom:6px}
+  .formcard .lead{font-size:15px;line-height:1.45}
+  fieldset{margin-top:22px}
+  legend{font-size:19px;margin-bottom:4px}
+  .step{width:26px;height:26px;font-size:14px;margin-right:8px;vertical-align:2px}
+  label{font-size:14px;margin:10px 0 4px}
+  .hint{font-size:13.5px;line-height:1.4;margin:2px 0 4px}
+  input[type=text],input[type=email],input[type=tel],input[type=date],select,textarea{font-size:16px;padding:10px 12px;border-radius:10px}
+  input[type=date]{min-height:44px}
+  textarea{min-height:64px}
+  .row{grid-template-columns:1fr 1fr;gap:10px}
+  .row:has(.email){grid-template-columns:1fr;gap:0}
+  .err-text{font-size:12.5px}
+  .chips{gap:8px;margin:4px 0 2px}
+  .chip-opt{flex:1 1 calc(50% - 8px)}
+  .chip-opt span{min-height:42px;padding:8px 12px;font-size:15px;border-radius:12px;gap:8px}
+  .chip-opt span:before{width:18px;height:18px}
+  .chips.small{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .chips.small .chip-opt span{min-height:40px;padding:6px 4px;font-size:14px;justify-content:center;text-align:center}
+  .chips.small .chip-opt span:before{display:none}
+  .chips.count{grid-template-columns:repeat(8,1fr);gap:5px}
+  .chips.count .chip-opt span{min-height:44px;padding:0;font-size:17px}
+  .chips.cards{display:flex}
+  .chips.cards .chip-opt{flex:1 1 calc(50% - 8px)}
+  .chips.cards .chip-opt span{align-items:center}
+  .chips.cards b{font-weight:500}
+  .chips.cards i{display:none}
+  .kid-card{padding:12px 12px 6px;margin-top:10px;border-radius:16px}
+  .kid-num{font-size:19px}
+  .kid-badge{font-size:11px;padding:4px 9px;letter-spacing:.03em}
+  .sub-card{padding:12px 12px 6px;margin-top:10px;border-radius:16px}
+  .sub-head b{font-size:17px}
+  h3.mini{font-size:17px;margin-top:18px}
+  .add-btn{padding:11px;font-size:15px;margin-top:10px;border-radius:12px}
+  .check{font-size:14.5px;margin-top:12px;gap:10px}
+  .submit{margin-top:18px}
+  .submit .btn{width:100%;text-align:center}
+  .price-card{order:0;margin-top:22px;padding:18px 16px;border-radius:18px}
+  .price-card .pc-title{font-size:24px}
+  .pc-sub{font-size:14px;margin-bottom:6px}
+  .pc-kid,.pc-row{font-size:15px;padding:8px 0}
+  .pc-kid small{font-size:13px}
+  .pc-total{font-size:16px}
+  .pc-total b{font-size:28px}
+  .pc-opt,.pc-opt span{font-size:14px}
+  .price-card .pc-note{font-size:13px}
+  .price-bar{padding:9px 14px calc(9px + env(safe-area-inset-bottom));transition:transform .25s ease}
+  .price-bar.away{transform:translateY(115%)}
+  .price-bar b{display:inline-block;font-size:24px;line-height:1.1;transform-origin:left center}
+  .price-bar b.flash{animation:flash .6s ease}
+  .price-bar small{font-size:11.5px}
+  .price-bar .pb-week{color:#C9D2CF;font-size:12.5px}
+  .price-bar .btn{padding:11px 16px;font-size:14px}
+}
+@media (max-width:860px){.kid-card textarea{min-height:46px}}
+.chips.stack{margin:6px 0 4px;background:none;border:0;border-radius:0;padding:0}

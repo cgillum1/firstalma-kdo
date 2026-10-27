@@ -46,23 +46,29 @@
   const count = () => Number(KDO.radio(form, 'kidCount') || 1);
   const activeCards = () => [...kidsEl.children].slice(0, count());
 
+  // Until a birthday is entered, a child is counted at the $25 rate so the total is never $0.
+  const EST_RATE = 25;
   function update() {
+    let estimated = false;
     const kids = activeCards().map((c, i) => {
-      const g = groupFor(c.querySelector('.k-bday').value);
+      const bday = c.querySelector('.k-bday').value;
+      const g = groupFor(bday);
       const badge = c.querySelector('.kid-badge');
-      if (g && g.rate) { badge.textContent = `${g.name} room, $${g.rate} per Thursday`; badge.style.display = 'inline-block'; }
+      const known = !!(g && g.rate);
+      if (known) { badge.textContent = `${g.name} room, $${g.rate} per Thursday`; badge.style.display = 'inline-block'; }
       else badge.style.display = 'none';
-      return { name: c.querySelector('.k-first').value.trim() || (count() > 1 ? `Child ${i + 1}` : 'Your child'), rate: g && g.rate ? g.rate : 0, group: g && g.rate ? g.name : '' };
+      if (!known) estimated = true;
+      return { name: c.querySelector('.k-first').value.trim() || (count() > 1 ? `Child ${i + 1}` : 'Your child'), rate: known ? g.rate : EST_RATE, group: known ? g.name : '', note: known ? '' : (bday ? 'Check the birthday' : 'No birthday yet') };
     });
     const priced = [...kids].sort((a, b) => b.rate - a.rate);
     let tuitionBase = 0, sibDiscount = 0, perThursday = 0;
     const lines = priced.map((k, i) => {
-      if (!k.rate) return `<div class="pc-kid"><span>${escapeHtml(k.name)}<small>Add a birthday to see the price</small></span><b>&nbsp;</b></div>`;
       const sem = k.rate * THURSDAYS;
       tuitionBase += sem;
       if (i > 0) sibDiscount += sem * (1 - SIBLING);
       perThursday += i > 0 ? k.rate * SIBLING : k.rate;
-      return `<div class="pc-kid"><span>${escapeHtml(k.name)}<small>${k.group}: $${k.rate} x ${THURSDAYS} Thursdays</small></span><b>${money2(sem)}</b></div>`;
+      const how = k.group ? `${k.group}: $${k.rate} x ${THURSDAYS} Thursdays` : `${k.note}, counted at $${k.rate}`;
+      return `<div class="pc-kid${k.group ? '' : ' pc-est'}"><span>${escapeHtml(k.name)}<small>${how}</small></span><b>${money2(sem)}</b></div>`;
     });
     if (sibDiscount > 0) lines.push(`<div class="pc-kid pc-disc"><span>Sibling discount<small>10% off each additional child</small></span><b>-${money2(sibDiscount)}</b></div>`);
     const tuition = tuitionBase - sibDiscount, enroll = ENROLL * kids.length, total = tuition + enroll;
@@ -70,10 +76,16 @@
     lines.push(`<div class="pc-kid"><span>Enrollment<small>$60 x ${kids.length} ${kids.length > 1 ? 'kids' : 'child'}, covers supplies and shirts</small></span><b>${money2(enroll)}</b></div>`);
     document.getElementById('price-lines').innerHTML = lines.join('');
     document.getElementById('pc-total').textContent = money2(total);
+    document.getElementById('pc-total-label').textContent = estimated ? 'Estimated total (add birthdays)' : 'Total for the semester';
     document.getElementById('pc-weekly').textContent = `${money2(perThursday)} each Thursday. The first Thursday plus enrollment (${money2(perThursday + enroll)}) is due when your spot is confirmed.`;
     document.getElementById('pc-full').textContent = `${money2(tuition * 0.9)} tuition + ${money2(enroll)} enrollment = ${money2(tuition * 0.9 + enroll)}`;
     const bar = document.getElementById('price-bar-amt');
-    if (bar) bar.textContent = money2(total);
+    if (bar) {
+      if (bar.textContent && bar.textContent !== money2(total)) { bar.classList.remove('flash'); void bar.offsetWidth; bar.classList.add('flash'); }
+      bar.textContent = money2(total);
+      document.getElementById('price-bar-label').textContent = estimated ? 'Estimated semester total' : 'Semester total';
+      document.getElementById('price-bar-week').textContent = `or ${money2(perThursday)} each Thursday`;
+    }
   }
 
   function money2(n) {
@@ -82,6 +94,17 @@
   }
 
   function escapeHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+  // On phones the cost sits at the end of the form, right above Submit, and a bottom bar tracks the total.
+  const card = document.getElementById('price-card'), layout = card.parentElement, slot = document.getElementById('pc-slot');
+  const mq = window.matchMedia('(max-width: 860px)');
+  const place = () => (mq.matches ? slot : layout).appendChild(card);
+  place();
+  mq.addEventListener('change', place);
+  const priceBar = document.querySelector('.price-bar');
+  if (priceBar && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => priceBar.classList.toggle('away', e.isIntersecting), { threshold: 0.1 }).observe(card);
+  }
 
   form.querySelectorAll('input[name=kidCount]').forEach(r => r.addEventListener('change', () => renderKids(count())));
   form.addEventListener('input', e => { if (e.target.classList.contains('k-first')) update(); });
