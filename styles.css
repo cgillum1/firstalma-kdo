@@ -318,3 +318,5 @@ details.faq p{margin-top:0}
 .docs b{display:block;font-family:var(--serif);font-weight:400;font-size:26px}
 .docs span{color:var(--muted);font-size:15px}
 @media (max-width:860px){.bigfacts{grid-template-columns:1fr 1fr}.bigfacts b{font-size:24px}.tiles{grid-template-columns:1fr 1fr}.tiles div{font-size:17px;padding:16px}.ratios{grid-template-columns:1fr}.docs{grid-template-columns:1fr}}
+
+@media (max-width:860px){.formcard .bigfacts{grid-template-columns:1fr!important}}
