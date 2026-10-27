@@ -411,3 +411,5 @@ details.faq p{margin-top:0}
 .pc-per div{background:#2A3330;border-radius:12px;padding:10px 12px}
 .pc-per small{display:block;font-size:13px;color:#B8C4C1}
 .pc-per b{font-family:var(--serif);font-weight:400;font-size:26px;color:#fff}
+.pc-mo{font-family:var(--sans,'DM Sans'),sans-serif;font-size:15px;color:#B8C4C1;margin-left:3px}
+.pc-lbl{display:block;font-size:13px;color:#E4D0A1;font-weight:400}

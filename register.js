@@ -84,15 +84,16 @@
     document.getElementById('pc-total').textContent = money2(total);
     document.getElementById('pc-week').textContent = money2(perThursday);
     document.getElementById('pc-month').textContent = money2(monthly);
-    document.getElementById('pc-total-label').textContent = estimated ? 'Estimated total (add birthdays)' : 'Total for the semester';
+    document.getElementById('pc-total-label').innerHTML = 'Monthly payment' + (estimated ? '<small class="pc-lbl">Estimate until birthdays are added</small>' : '');
     document.getElementById('pc-monthly').textContent = `${money2(monthly)} by the 7th of January, February, March, and April, then ${money2(lastMonth)} by May 7 (May has only 2 Thursdays).`;
     document.getElementById('pc-full').textContent = `${money2(tuition * 0.9)} tuition + ${money2(fee)} fee = ${money2(tuition * 0.9 + fee)}, due by January 7.`;
     const bar = document.getElementById('price-bar-amt');
     if (bar) {
-      if (bar.textContent && bar.textContent !== money2(total)) { bar.classList.remove('flash'); void bar.offsetWidth; bar.classList.add('flash'); }
-      bar.textContent = money2(total);
-      document.getElementById('price-bar-label').textContent = estimated ? 'Estimated semester total' : 'Semester total';
-      document.getElementById('price-bar-week').textContent = `or ${money2(monthly)} a month`;
+      const mo = money2(monthly) + '/mo';
+      if (bar.textContent && bar.textContent !== mo) { bar.classList.remove('flash'); void bar.offsetWidth; bar.classList.add('flash'); }
+      bar.textContent = mo;
+      document.getElementById('price-bar-label').textContent = estimated ? 'Estimated monthly payment' : 'Monthly payment';
+      document.getElementById('price-bar-week').textContent = `${money2(perThursday)} a week`;
     }
   }
 
