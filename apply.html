@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Teach at KDO | Kids Day Out at First Baptist Alma</title>
+<link rel="icon" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a href="./"><img src="assets/kdo-sunrise-full.png" alt="Kids Day Out, First Baptist Alma"></a>
+  <nav><a class="hide-sm" href="./#safety">Safety</a><a class="btn btn-primary btn-small" href="register.html">Register a child</a></nav>
+</div></header>
+
+<main class="formpage"><div class="wrap">
+<div class="formcard" style="max-width:820px;margin:0 auto">
+  <form id="apply-form" novalidate>
+    <p class="eyebrow">Teachers and substitutes</p>
+    <h1>Teach at KDO</h1>
+    <p class="lead">KDO hires teachers and substitutes for Thursdays. Pay is $13 an hour, and the team meets to pray together before the kids arrive.</p>
+
+    <div class="steps4">
+      <div><em>3 minutes</em><b>Apply</b><span>Fill out this form.</span></div>
+      <div><em>5 minutes</em><b>Quick background check</b><span>A short form. We handle the rest.</span></div>
+      <div><em>A few evenings</em><b>Free online training</b><span>Watch at your own pace, from your couch.</span></div>
+      <div><em>One morning</em><b>CPR and first aid</b><span>About 3 hours. We'll help you sign up.</span></div>
+    </div>
+    <p class="hint" style="margin-top:12px">No teaching degree is required.</p>
+
+    <fieldset><legend><span class="step">1</span>About you</legend>
+      <div class="row">
+        <div class="field"><label for="first">First name</label><input type="text" id="first" required autocomplete="given-name"><small class="err-text"></small></div>
+        <div class="field"><label for="last">Last name</label><input type="text" id="last" required autocomplete="family-name"><small class="err-text"></small></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="phone">Cell phone</label><input type="tel" id="phone" class="phone" required autocomplete="tel" placeholder="(479) 555-0123" inputmode="numeric"><small class="err-text"></small></div>
+        <div class="field"><label for="email">Email</label><input type="email" id="email" class="email" required autocomplete="email" placeholder="you@example.com"><small class="err-text"></small></div>
+      </div>
+      <div class="field"><label for="address">Home address <span class="opt">(optional)</span></label><input type="text" id="address" autocomplete="street-address"></div>
+      <label class="check"><input type="checkbox" id="adult" required><span>I'm 18 or older.</span></label>
+    </fieldset>
+
+    <fieldset><legend><span class="step">2</span>The role</legend>
+      <label>I'm interested in</label>
+      <div class="chips cards" role="radiogroup" aria-label="Role" data-required>
+        <label class="chip-opt"><input type="radio" name="role" value="Teacher"><span><b>Teacher</b><i>Every Thursday</i></span></label>
+        <label class="chip-opt"><input type="radio" name="role" value="Substitute"><span><b>Substitute</b><i>When we need you</i></span></label>
+        <label class="chip-opt"><input type="radio" name="role" value="Either"><span><b>Either</b><i>Wherever I fit</i></span></label>
+      </div>
+      <div class="field"><label for="experience">Your experience with young children</label><textarea id="experience" rows="3" required placeholder="Nursery, teaching, your own kids, babysitting. Anything counts!"></textarea><small class="err-text"></small></div>
+      <label>Are you CPR certified?</label>
+      <div class="chips" role="radiogroup" aria-label="CPR certified">
+        <label class="chip-opt"><input type="radio" name="cpr" value="Yes"><span>Yes</span></label>
+        <label class="chip-opt"><input type="radio" name="cpr" value="Not yet, happy to get certified"><span>Not yet, happy to</span></label>
+      </div>
+      <div class="field"><label for="churchHome">Church home <span class="opt">(optional)</span></label><input type="text" id="churchHome"></div>
+      <div class="field"><label for="why">Why do you want to serve at KDO? <span class="opt">(optional)</span></label><textarea id="why" rows="3"></textarea></div>
+    </fieldset>
+
+    <fieldset><legend><span class="step">3</span>References</legend>
+      <div class="field"><label for="ref1">Reference 1 <span class="opt">(name and phone)</span></label><input type="text" id="ref1" required><small class="err-text"></small></div>
+      <div class="field"><label for="ref2">Reference 2 <span class="opt">(optional)</span></label><input type="text" id="ref2"></div>
+      <label class="check"><input type="checkbox" id="consent" required><span>I'm okay with a background check before working with kids.</span></label>
+    </fieldset>
+
+    <div class="hp" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" tabindex="-1" autocomplete="off"></div>
+    <div class="submit"><button class="btn btn-primary" type="submit" id="submit-btn">Send my application</button><span class="msg" id="msg" role="status"></span></div>
+    <p class="fine">Want the details first? Read the <a href="docs/KDO-Staff-Policies-Manual.pdf" target="_blank">Staff Policies Manual</a>.</p>
+  </form>
+
+  <div class="thanks" id="thanks">
+    <img src="assets/kdo-mark-full.png" alt="" style="width:120px;margin:0 auto 18px">
+    <h2>Application received</h2>
+    <p class="lead" style="margin:0 auto">Thank you. Kim will contact you about next steps.</p>
+    <p style="margin-top:22px"><a class="btn btn-primary" href="./">Back to KDO</a></p>
+  </div>
+</div>
+</div></main>
+
+<footer><div class="wrap">
+  <img src="assets/kdo-sunrise-white.png" alt="Kids Day Out">
+  <div>A ministry of First Baptist Church Alma<br>211 N Mountain Grove Rd, Alma, AR 72921<br><a href="mailto:kdo@firstalma.com">kdo@firstalma.com</a></div>
+</div></footer>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Register | Kids Day Out at First Baptist Alma</title>
+<link rel="icon" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a href="./"><img src="assets/kdo-sunrise-full.png" alt="Kids Day Out, First Baptist Alma"></a>
+  <nav><a class="hide-sm" href="./#tuition">Tuition</a><a class="btn btn-primary btn-small" href="apply.html">Apply to teach</a></nav>
+</div></header>
+
+<main class="formpage"><div class="wrap reg-layout">
+<div class="formcard">
+  <form id="reg-form" novalidate>
+    <p class="eyebrow">Founding families, January to May 2027</p>
+    <h1>Register for KDO</h1>
+    <p class="lead">Thursdays, 9:00 to 2:00, at First Baptist Church Alma. Nothing is due until your spot is confirmed.</p>
+
+    <fieldset>
+      <legend><span class="step">1</span>How many kids are you registering?</legend>
+      <div class="chips count" id="kid-count" role="radiogroup" aria-label="Number of kids">
+        <label class="chip-opt"><input type="radio" name="kidCount" value="1" checked><span>1</span></label>
+        <label class="chip-opt"><input type="radio" name="kidCount" value="2"><span>2</span></label>
+        <label class="chip-opt"><input type="radio" name="kidCount" value="3"><span>3</span></label>
+        <label class="chip-opt"><input type="radio" name="kidCount" value="4"><span>4</span></label>
+        <label class="chip-opt"><input type="radio" name="kidCount" value="5"><span>5</span></label>
+        <label class="chip-opt"><input type="radio" name="kidCount" value="6"><span>6</span></label>
+        <label class="chip-opt"><input type="radio" name="kidCount" value="7"><span>7</span></label>
+        <label class="chip-opt"><input type="radio" name="kidCount" value="8"><span>8</span></label>
+      </div>
+      <p class="hint">Registering more than 8? Email <a href="mailto:kdo@firstalma.com">kdo@firstalma.com</a> and we'll help.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="step">2</span>Your kids</legend>
+      <div id="kids"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="step">3</span>You</legend>
+      <div class="row">
+        <div class="field"><label for="pFirst">First name</label><input type="text" id="pFirst" required autocomplete="given-name"></div>
+        <div class="field"><label for="pLast">Last name</label><input type="text" id="pLast" required autocomplete="family-name"></div>
+      </div>
+      <label>Relationship to the kids</label>
+      <div class="chips" role="radiogroup" aria-label="Relationship" data-required>
+        <label class="chip-opt"><input type="radio" name="relation" value="Mom"><span>Mom</span></label>
+        <label class="chip-opt"><input type="radio" name="relation" value="Dad"><span>Dad</span></label>
+        <label class="chip-opt"><input type="radio" name="relation" value="Grandparent"><span>Grandparent</span></label>
+        <label class="chip-opt"><input type="radio" name="relation" value="Guardian"><span>Guardian</span></label>
+      </div>
+      <div class="row">
+        <div class="field"><label for="pPhone">Cell phone</label><input type="tel" id="pPhone" class="phone" required autocomplete="tel" placeholder="(479) 555-0123" inputmode="numeric"><small class="err-text"></small></div>
+        <div class="field"><label for="pEmail">Email</label><input type="email" id="pEmail" class="email" required autocomplete="email" placeholder="you@example.com"><small class="err-text"></small></div>
+      </div>
+      <div class="field"><label for="address">Home address <span class="opt">(optional)</span></label><input type="text" id="address" autocomplete="street-address"></div>
+      <button type="button" class="add-btn" id="add-p2">+ Add a second parent or guardian</button>
+      <div class="sub-card" id="p2" hidden>
+        <div class="sub-head"><b>Second parent or guardian</b><button type="button" class="rm-btn" id="rm-p2">Remove</button></div>
+        <div class="row">
+          <div class="field"><label for="p2First">First name</label><input type="text" id="p2First" required><small class="err-text"></small></div>
+          <div class="field"><label for="p2Last">Last name</label><input type="text" id="p2Last" required><small class="err-text"></small></div>
+        </div>
+        <label>Relationship to the kids</label>
+        <div class="chips" role="radiogroup" aria-label="Second parent relationship" data-required>
+          <label class="chip-opt"><input type="radio" name="p2Relation" value="Mom"><span>Mom</span></label>
+          <label class="chip-opt"><input type="radio" name="p2Relation" value="Dad"><span>Dad</span></label>
+          <label class="chip-opt"><input type="radio" name="p2Relation" value="Grandparent"><span>Grandparent</span></label>
+          <label class="chip-opt"><input type="radio" name="p2Relation" value="Guardian"><span>Guardian</span></label>
+        </div>
+        <div class="row">
+          <div class="field"><label for="p2Phone">Cell phone</label><input type="tel" id="p2Phone" class="phone" required placeholder="(479) 555-0123" inputmode="numeric"><small class="err-text"></small></div>
+          <div class="field"><label for="p2Email">Email</label><input type="email" id="p2Email" class="email" required placeholder="you@example.com"><small class="err-text"></small></div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="step">4</span>Emergency contact and pickup</legend>
+      <p class="hint">Someone other than a parent we can call if we can't reach you.</p>
+      <div id="contacts"></div>
+      <button type="button" class="add-btn" id="add-contact">+ Add another emergency contact</button>
+      <h3 class="mini">Other approved pickups <span class="opt">(optional)</span></h3>
+      <p class="hint">Anyone else allowed to pick up your kids.</p>
+      <div id="pickups"></div>
+      <button type="button" class="add-btn" id="add-pickup">+ Add an approved pickup</button>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="step">5</span>A few more things</legend>
+      <label>Church home</label>
+      <div class="chips cards" role="radiogroup" aria-label="Church home">
+        <label class="chip-opt"><input type="radio" name="church" value="First Baptist Alma"><span><b>First Baptist Alma</b><i>This is our church</i></span></label>
+        <label class="chip-opt"><input type="radio" name="church" value="Another church"><span><b>Another church</b><i>We attend somewhere else</i></span></label>
+        <label class="chip-opt"><input type="radio" name="church" value="No church home"><span><b>Not right now</b><i>Everyone's welcome</i></span></label>
+      </div>
+      <div class="field"><label for="heard">How did you hear about KDO? <span class="opt">(optional)</span></label><textarea id="heard" rows="3" placeholder="A friend, story time, Facebook, church..."></textarea></div>
+      <label>Photos</label>
+      <div class="chips stack" role="radiogroup" aria-label="Photo permission">
+        <label class="chip-opt"><input type="radio" name="photos" value="yes" checked><span>OK to share photos with KDO families in Homeroom</span></label>
+        <label class="chip-opt"><input type="radio" name="photos" value="no"><span>Please don't share photos</span></label>
+      </div>
+      <label class="check"><input type="checkbox" id="agree" required><span>I've read the <a href="docs/KDO-Parent-Handbook.pdf" target="_blank">Parent Handbook</a> and understand spots are first come, first served.</span></label>
+    </fieldset>
+
+    <div class="hp" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" tabindex="-1" autocomplete="off"></div>
+    <div class="submit"><button class="btn btn-primary" type="submit" id="submit-btn">Submit registration</button><span class="msg" id="msg" role="status"></span></div>
+  </form>
+
+  <div class="thanks" id="thanks">
+    <img src="assets/kdo-mark-full.png" alt="" style="width:120px;margin:0 auto 18px">
+    <h2>Registration received</h2>
+    <p class="lead" id="thanks-text" style="margin:0 auto">Thanks for registering. Spots are assigned in the order families sign up, and Kim will reach out within a few days to confirm your spot and next steps.</p>
+    <p style="margin-top:22px"><a class="btn btn-primary" href="./">Back to KDO</a></p>
+  </div>
+</div>
+
+<aside class="price-card" id="price-card">
+  <h2 class="pc-title">Your cost</h2>
+  <p class="pc-sub">Founding Family rate. KDO is every Thursday, 9:00 to 2:00.</p>
+  <div id="price-lines"></div>
+  <div class="pc-row pc-total"><span>Total for the semester</span><b id="pc-total">$510</b></div>
+  <div class="pc-pay">
+    <p class="pc-pay-title">Two ways to pay</p>
+    <div class="pc-opt"><b>Weekly</b><span id="pc-weekly">$25 each Thursday. The first Thursday plus enrollment ($85) is due when your spot is confirmed.</span></div>
+    <div class="pc-opt"><b>In full, save 10%</b><span id="pc-full">$405 tuition + $60 enrollment = $465</span></div>
+  </div>
+  <p class="pc-note">Nothing is due today. Families who join this semester keep these rates as long as they stay enrolled.</p>
+</aside>
+</div></main>
+
+<div class="price-bar"><div><small>Semester total</small><b id="price-bar-amt">$510</b></div><a class="btn btn-primary" href="#submit-btn">Finish</a></div>
+
+<template id="person-tpl">
+  <div class="sub-card person">
+    <div class="sub-head"><b class="p-title"></b><button type="button" class="rm-btn">Remove</button></div>
+    <div class="row">
+      <div class="field"><label>First name</label><input type="text" class="p-first" required><small class="err-text"></small></div>
+      <div class="field"><label>Last name</label><input type="text" class="p-last" required><small class="err-text"></small></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Phone</label><input type="tel" class="phone p-phone" required placeholder="(479) 555-0123" inputmode="numeric"><small class="err-text"></small></div>
+      <div class="field"><label>Relationship <span class="opt">(optional)</span></label><input type="text" class="p-rel" placeholder="Grandma, aunt, neighbor"></div>
+    </div>
+    <label class="check p-pick-wrap"><input type="checkbox" class="p-pick" checked><span>Also allowed to pick up</span></label>
+  </div>
+</template>
+
+<template id="kid-tpl">
+  <div class="kid-card">
+    <div class="kid-head"><span class="kid-num"></span><span class="kid-badge"></span></div>
+    <div class="row">
+      <div class="field"><label>First name</label><input type="text" class="k-first" required autocomplete="off"></div>
+      <div class="field"><label>Last name</label><input type="text" class="k-last" required autocomplete="off"></div>
+    </div>
+    <div class="field"><label>Birthday</label><input type="date" class="k-bday" required min="2020-08-02" max="2026-07-07"><small class="err-text"></small></div>
+    <label>Potty trained?</label>
+    <div class="chips small potty" role="radiogroup">
+      <label class="chip-opt"><input type="radio" value="Yes"><span>Yes</span></label>
+      <label class="chip-opt"><input type="radio" value="Working on it"><span>Working on it</span></label>
+      <label class="chip-opt"><input type="radio" value="Not yet" checked><span>Not yet</span></label>
+    </div>
+    <div class="field"><label>Allergies, medical needs, or anything we should know <span class="opt">(optional)</span></label><textarea class="k-notes" rows="2"></textarea></div>
+  </div>
+</template>
+
+<footer><div class="wrap">
+  <img src="assets/kdo-sunrise-white.png" alt="Kids Day Out">
+  <div>A ministry of First Baptist Church Alma<br>211 N Mountain Grove Rd, Alma, AR 72921<br><a href="mailto:kdo@firstalma.com">kdo@firstalma.com</a></div>
+</div></footer>
+<script src="app.js"></script>
+<script src="register.js"></script>
+</body>
+</html>
