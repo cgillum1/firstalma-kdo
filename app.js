@@ -443,7 +443,7 @@ KDO.docViewer = (() => {
   const phone = () => window.matchMedia('(max-width: 600px)').matches;
   const DL = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>';
 
-  async function open(key, push = true) {
+  async function open(key, push = true, only = '') {
     const docs = await load(), d = docs[key];
     if (!d || el) return;
     back = document.createElement('div');
@@ -459,9 +459,9 @@ KDO.docViewer = (() => {
       pages += `<div class="dv-page" style="aspect-ratio:1/${d.ratio}"><img src="docs/pages/${key}-${i}.jpg" alt="${d.title}, page ${i}" loading="${i < 3 ? 'eager' : 'lazy'}" decoding="async"></div>`;
     }
     el.innerHTML = `<div class="dv-bar"><div class="dv-title"><b>${d.title}</b><small>${d.html ? 'Kids Day Out at First Baptist Alma' : d.pages + ' ' + unit}</small></div>`
-      + (d.downloads || []).map(([label, href]) => `<a class="dv-dl" href="${href}" download aria-label="Download ${label}">${DL}${label}</a>`).join('')
+      + (d.downloads || []).filter(([label]) => !only || label.toLowerCase() === only).map(([label, href]) => `<a class="dv-dl" href="${href}" download aria-label="Download ${label}">${DL}${label}</a>`).join('')
       + '<button type="button" class="dv-x" aria-label="Close">&times;</button></div>'
-      + `<div class="dv-scroll">${d.html ? '<article class="dv-text"><p class="dv-loading">Loading...</p></article>' : `<div class="dv-pages">${pages}</div>`}</div>`
+      + `<div class="dv-scroll">${d.html ? `<article class="dv-text dv-${key}"><p class="dv-loading">Loading...</p></article>` : `<div class="dv-pages">${pages}</div>`}</div>`
       + (!d.html && d.pages > 1 ? `<div class="dv-count">1 of ${d.pages}</div>` : '');
     if (d.html) fetch(d.html).then(r => r.text()).then(t => { const a = el && el.querySelector('.dv-text'); if (a) a.innerHTML = t; });
     document.body.append(back, el);
@@ -499,7 +499,7 @@ KDO.docViewer = (() => {
     const a = e.target.closest && e.target.closest('[data-doc]');
     if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
     e.preventDefault();
-    open(a.dataset.doc);
+    open(a.dataset.doc, true, a.dataset.dl || '');
   });
   if (/^#view=\w+$/.test(location.hash)) open(location.hash.slice(6), false);
   return { open, close, phone };

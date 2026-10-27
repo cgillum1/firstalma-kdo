@@ -551,3 +551,18 @@ details.pc-more{margin-top:14px;background:none;border:0;border-top:1px solid #3
 .dv-dl+.dv-dl{margin-left:-4px;background:transparent;border-color:#4A5552}
 @media (max-width:600px){.dv-bar{gap:8px}.dv-dl{padding:7px 11px;font-size:13px}.dv-dl svg{width:13px;height:13px}.dv-title small{display:none}}
 @media (max-width:600px){.dv-bar{flex-wrap:wrap;row-gap:10px}.dv-title{order:0;flex:1 1 calc(100% - 56px)}.dv-x{order:1}.dv-dl{order:2}.dv-dl+.dv-dl{margin-left:0}}
+/* handbook cards on the homepage and the applications */
+.doclist.two{grid-template-columns:repeat(2,1fr);max-width:760px}
+@media (max-width:860px){.doclist.two{grid-template-columns:1fr 1fr}}
+.doccard{display:flex;align-items:center;gap:16px;text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--sand);border-radius:16px;padding:12px 16px 12px 12px;margin:18px 0 4px;transition:transform .18s ease,box-shadow .18s ease}
+.doccard:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(30,38,36,.1)}
+.doccard .thumb{flex:none;width:84px;height:104px;border-radius:10px;overflow:hidden;background:var(--cream);padding:7px 7px 0}
+.doccard .thumb img{display:block;width:100%;border-radius:3px 3px 0 0;box-shadow:0 1px 4px rgba(30,38,36,.15)}
+.doccard b{display:block;font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.2}
+.doccard span{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.doccard em{display:block;font-style:normal;font-size:13.5px;font-weight:700;color:var(--teal-dark);margin-top:6px}
+@media (max-width:860px){.doccard{gap:12px;padding:10px 12px 10px 10px}.doccard .thumb{width:66px;height:84px}.doccard b{font-size:17px}.doccard span,.doccard em{font-size:12.5px}}
+.dv-text col{width:auto!important}
+.dv-playbook td:first-child{white-space:nowrap;font-weight:700;color:var(--teal-dark);width:1%;padding-right:14px;vertical-align:top}
+.dv-playbook tr:nth-child(even) td{background:#F7F4EC}
+.dv-playbook th{text-align:left;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}

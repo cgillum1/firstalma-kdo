@@ -1,4 +1,17 @@
 {
+ "playbook": {
+  "title": "Director's Playbook",
+  "pages": 2,
+  "ratio": 1.2945,
+  "pdf": "docs/KDO-Directors-Playbook.pdf",
+  "downloads": [
+   [
+    "PDF",
+    "docs/KDO-Directors-Playbook.pdf"
+   ]
+  ],
+  "html": "docs/pages/playbook.html"
+ },
  "proposal": {
   "title": "KDO Proposal",
   "pages": 14,
