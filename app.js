@@ -159,7 +159,7 @@ if (applyForm) {
       form: 'leader', website: v('website'), first: v('first'), last: v('last'), phone: v('phone'), email: v('email'),
       address: v('address'), adult: document.getElementById('adult').checked ? 'Yes' : '',
       role: KDO.radio(applyForm, 'role'), experience: v('experience'), cpr: KDO.radio(applyForm, 'cpr'),
-      churchHome: v('churchHome'), why: v('why'), ref1: v('ref1'), ref2: v('ref2'),
+      churchHome: v('churchHome'), why: v('why'), ref1: [`${v('refFirst')} ${v('refLast')}`, v('refPhone'), v('refRel')].filter(Boolean).join(', '), ref2: '',
       consent: document.getElementById('consent').checked ? 'Yes' : ''
     };
     sending = true; button.disabled = true; button.textContent = 'Sending...';

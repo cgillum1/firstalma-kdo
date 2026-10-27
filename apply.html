@@ -67,9 +67,16 @@
       <div class="field"><label for="why">Why do you want to serve at KDO? <span class="opt">(optional)</span></label><textarea id="why" rows="3"></textarea></div>
     </fieldset>
 
-    <fieldset><legend><span class="step">3</span>References</legend>
-      <div class="field"><label for="ref1">Reference 1 <span class="opt">(name and phone)</span></label><input type="text" id="ref1" required><small class="err-text"></small></div>
-      <div class="field"><label for="ref2">Reference 2 <span class="opt">(optional)</span></label><input type="text" id="ref2"></div>
+    <fieldset><legend><span class="step">3</span>Reference</legend>
+      <p class="hint">Someone who knows you well, not a family member.</p>
+      <div class="row">
+        <div class="field"><label for="refFirst">First name</label><input type="text" id="refFirst" required><small class="err-text"></small></div>
+        <div class="field"><label for="refLast">Last name</label><input type="text" id="refLast" required><small class="err-text"></small></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="refPhone">Phone</label><input type="tel" id="refPhone" class="phone" required placeholder="(479) 555-0123" inputmode="numeric"><small class="err-text"></small></div>
+        <div class="field"><label for="refRel">Relation or notes <span class="opt">(optional)</span></label><input type="text" id="refRel" placeholder="Former boss, pastor, friend of 5 years"></div>
+      </div>
       <label class="check"><input type="checkbox" id="consent" required><span>I'm okay with a background check before working with kids.</span></label>
     </fieldset>
 
