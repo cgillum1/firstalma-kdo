@@ -305,7 +305,7 @@ details.faq p{margin-top:0}
 .tags span{background:var(--cream);border-radius:999px;padding:9px 16px;font-weight:700;font-size:15px}
 .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
 .pills span{background:#fff;border:1px solid var(--sand);border-radius:999px;padding:10px 16px;font-weight:700;font-size:15px}
-.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
 .tiles div{background:#2A3330;border:1px solid #3A4441;border-radius:18px;padding:22px;font-family:var(--serif);font-size:22px;color:#fff}
 .ratios{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
 .ratios div{border-radius:18px;padding:18px 22px;background:rgba(255,255,255,.04);border:1px solid #3A4441}
