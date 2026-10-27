@@ -187,7 +187,7 @@
       first: c.querySelector('.k-first').value.trim(), last: c.querySelector('.k-last').value.trim(),
       bday: c.querySelector('.k-bday').value, notes: c.querySelector('.k-notes').value.trim(),
       potty: c.querySelector('.potty input:checked')?.value || '',
-      special: c.querySelector('.special input:checked')?.value || 'No'
+      special: c.querySelector('.special input:checked')?.value === 'Yes' ? 'Yes: ' + c.querySelector('.k-special').value.trim() : 'No'
     }));
     const c = people('contacts'), e1 = c[0] || {}, e2 = c[1] || {};
     const hasP2 = !p2.hidden;
