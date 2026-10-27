@@ -132,6 +132,70 @@ const KDO = {
 KDO.markRequired();
 KDO.wirePhones();
 
+// Address suggestions as you type. Free: Photon, built on OpenStreetMap, no key. Typing your own address still works.
+KDO.addressAutocomplete = input => {
+  const STATES = { Arkansas: 'AR', Oklahoma: 'OK', Missouri: 'MO', Texas: 'TX', Louisiana: 'LA', Mississippi: 'MS', Tennessee: 'TN', Kansas: 'KS' };
+  const box = document.createElement('div');
+  box.className = 'addr-list';
+  box.hidden = true;
+  input.closest('.field').style.position = 'relative';
+  input.after(box);
+  input.setAttribute('autocomplete', 'off');
+  let timer, items = [], active = -1, seq = 0;
+  const format = (p, typedNum) => {
+    const street = p.street || p.name || '';
+    const line1 = [p.housenumber || typedNum || '', street].filter(Boolean).join(' ');
+    const city = p.city || p.district || p.county || '';
+    const state = [STATES[p.state] || p.state || '', p.postcode || ''].filter(Boolean).join(' ');
+    return [line1, city, state].filter(Boolean).join(', ');
+  };
+  const close = () => { box.hidden = true; active = -1; };
+  const pick = i => { input.value = items[i]; close(); KDO.clearErr(input); };
+  const render = () => {
+    box.innerHTML = '';
+    items.forEach((t, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = t;
+      if (i === active) b.className = 'on';
+      b.addEventListener('pointerdown', e => { e.preventDefault(); pick(i); });
+      box.appendChild(b);
+    });
+    const credit = document.createElement('small');
+    credit.textContent = 'Suggestions © OpenStreetMap';
+    box.appendChild(credit);
+    box.hidden = !items.length;
+  };
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    const q = input.value.trim();
+    if (q.length < 4) { items = []; close(); return; }
+    timer = setTimeout(async () => {
+      const mine = ++seq;
+      try {
+        const url = 'https://photon.komoot.io/api/?limit=8&lang=en&lat=35.478&lon=-94.222&q=' + encodeURIComponent(q);
+        const data = await (await fetch(url)).json();
+        if (mine !== seq) return;
+        const typedNum = (q.match(/^\s*(\d+[A-Za-z]?)\s/) || [])[1];
+        const seen = new Set();
+        items = (data.features || []).map(f => f.properties).filter(p => p.countrycode === 'US' && (p.state === 'Arkansas' || p.state === 'Oklahoma') && (p.type === 'street' || (p.type === 'house' && (p.housenumber || !p.name))))
+          .map(p => format(p, typedNum)).filter(t => !seen.has(t) && seen.add(t)).slice(0, 5);
+        active = -1;
+        render();
+      } catch (e) { close(); }
+    }, 250);
+  });
+  input.addEventListener('keydown', e => {
+    if (box.hidden) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); active = (active + 1) % items.length; render(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); active = (active - 1 + items.length) % items.length; render(); }
+    else if (e.key === 'Enter' && active > -1) { e.preventDefault(); pick(active); }
+    else if (e.key === 'Escape') close();
+  });
+  input.addEventListener('blur', () => setTimeout(close, 150));
+};
+document.querySelectorAll('#address').forEach(KDO.addressAutocomplete);
+
 // Live "spots left" on the home page; stays hidden if the sheet can't be reached.
 const spotsEl = document.getElementById('spots');
 if (spotsEl) {
