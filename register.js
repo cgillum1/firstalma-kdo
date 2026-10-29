@@ -1,7 +1,7 @@
 // Kids Day Out registration: one form per family, one sheet row per child.
 (() => {
   const START = { y: 2027, m: 1, d: 7 };
-  const THURSDAYS = 18, MONTHS = 5, FEE = 65, SIBLING = 0.9;
+  const THURSDAYS = 18, MONTHS = 5, FEE = 60, SIBLING = 0.9;
   const GROUPS = [
     { name: 'Babies', min: 6, max: 18, rate: 25 },
     { name: 'Toddlers', min: 18, max: 36, rate: 20 },
